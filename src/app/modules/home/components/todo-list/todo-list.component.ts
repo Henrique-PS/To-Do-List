@@ -10,13 +10,12 @@ import { TaskList } from '../../model/task-list';
 export class TodoListComponent implements DoCheck{
 
 
-  public taskList: Array<TaskList> = [
-  ]
+  public taskList: Array<TaskList> = JSON.parse(localStorage.getItem("list") || '[]')
 
   constructor() {}
 
   ngDoCheck(): void {
-    this.taskList.sort((first, last) => Number(first.checked) - Number(last.checked)) // sort(): um método que ordena um array, onde quando o retorno do método é -1 o array é ordenado de forma crescente e quando é 1 é ordenado de forma crescente. Nesse caso o atributo checked é booleano e está sendo convertido para número (ou seja, 0 ou 1), então o método está ordenando pelo valor do checked 
+    this.setLocalStorage()
   }
 
   public deleteItemTaskList(event: number){
@@ -41,6 +40,13 @@ export class TodoListComponent implements DoCheck{
       if (confirm) {
         this.deleteItemTaskList(index)
       }
+    }
+  }
+
+  public setLocalStorage(){
+    if(this.taskList){
+      this.taskList.sort((first, last) => Number(first.checked) - Number(last.checked)) // sort(): um método que ordena um array, onde quando o retorno do método é -1 o array é ordenado de forma crescente e quando é 1 é ordenado de forma crescente. Nesse caso o atributo checked é booleano e está sendo convertido para número (ou seja, 0 ou 1), então o método está ordenando pelo valor do checked 
+      localStorage.setItem('list', JSON.stringify(this.taskList)) // setItem: recebe uma chave e um valor como parâmetros
     }
   }
 }
